@@ -5,13 +5,15 @@ import 'package:mockito/mockito.dart';
 
 import 'remote_authentication_test.mocks.dart';
 
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/data/http/http_client.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/data/usecases/remote_authentication.dart';
+
+import 'package:flutter_clean_solid_tdd_designpatterns/data/http/http.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/data/usecases/usecases.dart';
 
 @GenerateMocks([HttpClient])
 void main() {
-  late HttpClient httpClient;
+  late MockHttpClient httpClient;
   late RemoteAuthentication sut;
   late String url;
   setUp(() {
@@ -35,5 +37,19 @@ void main() {
         },
       ),
     );
+  });
+
+  test("Should throw UnexpectedError if HttpClient returns 400", () async {
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.badRequest);
+    final params = AuthenticationParams(
+      email: faker.internet.email(),
+      secret: faker.internet.password(),
+    );
+    final future = sut.auth(params);
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
