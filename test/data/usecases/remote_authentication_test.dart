@@ -6,38 +6,10 @@ import 'package:mockito/mockito.dart';
 import 'remote_authentication_test.mocks.dart';
 
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
-
-class RemoteAuthentication {
-  final HttpClient httpClient;
-  final String url;
-
-  RemoteAuthentication({required this.httpClient, required this.url});
-
-  Future<void> auth(AuthenticationParams params) async {
-    final body = {
-      'email': params.email,
-      'passowrd': params.secret,
-    };
-    await httpClient.request(
-      url: url,
-      method: 'post',
-      body: body,
-    );
-  }
-}
-
-abstract class HttpClient {
-  Future<void> request({
-    required String url,
-    required String method,
-    Map? body,
-  });
-}
+import 'package:flutter_clean_solid_tdd_designpatterns/data/http/http_client.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/data/usecases/remote_authentication.dart';
 
 @GenerateMocks([HttpClient])
-
-// class HttpClientSpy extends Mock implements HttpClient {}
-
 void main() {
   late HttpClient httpClient;
   late RemoteAuthentication sut;
