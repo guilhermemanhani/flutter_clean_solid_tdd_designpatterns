@@ -1,1 +1,1 @@
-export './remoute_account_model.dart';
+export 'remote_account_model.dart';
