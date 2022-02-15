@@ -1,12 +1,17 @@
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/account_entity.dart';
+import '../../domain/entities/account_entity.dart';
+import '../http/http.dart';
 
 class RemouteAccountModel {
   final String accessToken;
 
   RemouteAccountModel(this.accessToken);
 
-  factory RemouteAccountModel.fromJson(Map json) =>
-      RemouteAccountModel(json['accessToken']);
+  factory RemouteAccountModel.fromJson(Map json) {
+    if (!json.containsKey('accessToken')) {
+      throw HttpError.invalidData;
+    }
+    return RemouteAccountModel(json['accessToken']);
+  }
 
   AccountEntity toEntity() => AccountEntity(accessToken);
 }
