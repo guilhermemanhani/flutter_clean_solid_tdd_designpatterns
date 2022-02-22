@@ -9,22 +9,42 @@ import 'http_adapter_test.mocks.dart';
 class HttpAdapter {
   final Client client;
   HttpAdapter(this.client);
-  Future<void> request({required String url, required String method}) async {
-    await client.post(Uri.parse(url));
+  Future<void> request({
+    required String url,
+    required String method,
+    Map? body,
+  }) async {
+    final headers = {
+      'content-type': 'application/json',
+      'accept': 'application/json',
+    };
+    await client.post(Uri.parse(url), headers: headers);
   }
 }
 
 @GenerateMocks([Client])
 void main() {
+  late MockClient client;
+  late HttpAdapter sut;
+  late String url;
+
+  setUp(() {
+    client = MockClient();
+    sut = HttpAdapter(client);
+    url = faker.internet.httpUrl();
+  });
+
   group('post', () {
     test('Should call post with correct values', () async {
-      final client = MockClient();
-      final sut = HttpAdapter(client);
-      final url = faker.internet.httpUrl();
+      await sut
+          .request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
-      await sut.request(url: url, method: 'post');
-
-      verify(client.post(Uri.parse(url)));
+      verify(client.post(Uri.parse(url),
+          headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json'
+          },
+          body: '{"any_key":"any_value"}'));
     });
   });
 }
