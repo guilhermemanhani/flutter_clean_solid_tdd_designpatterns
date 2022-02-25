@@ -40,6 +40,7 @@ void main() {
   });
   group('post', () {
     test('Should call post with correct values', () async {
+      // ! quando for testar tem q mockar utilizando a linha abaixo
       when(client.post(any,
               body: anyNamed('body'), headers: anyNamed('headers')))
           .thenAnswer(
