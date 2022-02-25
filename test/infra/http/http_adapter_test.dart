@@ -17,10 +17,16 @@ class HttpAdapter {
   }) async {
     final headers = {
       'content-type': 'application/json',
+<<<<<<< HEAD
       'accept': 'application/json'
     };
     final jsonBody = body != null ? jsonEncode(body) : null;
     await client.post(Uri.parse(url), headers: headers, body: jsonBody);
+=======
+      'accept': 'application/json',
+    };
+    await client.post(Uri.parse(url), headers: headers);
+>>>>>>> 6eff52e827aa2a23cdd16692f1d28f1d851f0ece
   }
 }
 
@@ -35,6 +41,7 @@ void main() {
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
+<<<<<<< HEAD
   group('post', () {
     test('Should call post with correct values', () async {
       // when(client.get(any, headers: anyNamed('headers')))
@@ -69,6 +76,20 @@ void main() {
           headers: anyNamed('headers'),
         ),
       );
+=======
+
+  group('post', () {
+    test('Should call post with correct values', () async {
+      await sut
+          .request(url: url, method: 'post', body: {'any_key': 'any_value'});
+
+      verify(client.post(Uri.parse(url),
+          headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json'
+          },
+          body: '{"any_key":"any_value"}'));
+>>>>>>> 6eff52e827aa2a23cdd16692f1d28f1d851f0ece
     });
   });
 }
