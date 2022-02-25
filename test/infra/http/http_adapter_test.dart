@@ -40,7 +40,11 @@ void main() {
   });
   group('post', () {
     test('Should call post with correct values', () async {
+      // !
       // ! quando for testar tem q mockar utilizando a linha abaixo
+      // ! Sem when ele da erro de stub ficar atendo a esse tipo de erro
+      // ! Acredito q é devido ao nullsafy
+      // !
       when(client.post(any,
               body: anyNamed('body'), headers: anyNamed('headers')))
           .thenAnswer(
@@ -71,6 +75,17 @@ void main() {
           headers: anyNamed('headers'),
         ),
       );
+    });
+
+    test('Should return data if post returns 200', () async {
+      when(client.post(any, headers: anyNamed('headers'))).thenAnswer(
+          (_) async => http.Response('{"any_key":"any_value"}', 200));
+      final response = await sut.request(
+        url: url,
+        method: 'post',
+      );
+
+      expect(response, {'any_key': 'any_value'});
     });
   });
 }
