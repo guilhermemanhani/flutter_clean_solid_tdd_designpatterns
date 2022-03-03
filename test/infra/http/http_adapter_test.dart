@@ -20,6 +20,14 @@ void main() {
     sut = HttpAdapter(client);
     url = faker.internet.httpUrl();
   });
+
+  group('shared', () {
+    test('Should call post with correct values', () async {
+      final future = sut.request(url: url, method: 'invalid_method');
+
+      expect(future, throwsA(HttpError.serverError));
+    });
+  });
   group('post', () {
     PostExpectation mockRequest() => when(
         client.post(any, body: anyNamed('body'), headers: anyNamed('headers')));
@@ -109,7 +117,8 @@ void main() {
       expect(response, null);
     });
 
-    test('Should return BadRequestErro if post returns 400', () async {
+    test('Should return BadRequestErro if post returns 400 body empty',
+        () async {
       mockResponse(400, body: '');
       final future = sut.request(
         url: url,
