@@ -1,11 +1,13 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/infra/http/http.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'http_adapter_test.mocks.dart';
+
+import 'package:flutter_clean_solid_tdd_designpatterns/data/http/http.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/infra/http/http.dart';
 
 @GenerateMocks([http.Client])
 void main() {
@@ -105,6 +107,16 @@ void main() {
       );
 
       expect(response, null);
+    });
+
+    test('Should return BadRequestErro if post returns 400', () async {
+      mockResponse(400);
+      final future = sut.request(
+        url: url,
+        method: 'post',
+      );
+
+      expect(future, throwsA(HttpError.badRequest));
     });
   });
 }
