@@ -26,6 +26,7 @@ class LoginPage extends StatelessWidget {
                           Icons.email,
                           color: Theme.of(context).primaryColorLight,
                         ),
+                        // errorText: '',
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
@@ -46,11 +47,11 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: null,
                       child: Text('Entrar'.toUpperCase()),
                     ),
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () => null,
                       icon: Icon(Icons.person),
                       label: Text('Criar conta'),
                     ),
