@@ -6,6 +6,8 @@ abstract class LoginPresenter {
   void validateEmail(String email);
 
   void validatePassword(String password);
+
+  void auth();
 }
 
 class LoginController implements LoginPresenter {
@@ -23,4 +25,7 @@ class LoginController implements LoginPresenter {
 
   @override
   Stream<bool> get isFormValidStream => throw UnimplementedError();
+
+  @override
+  void auth() {}
 }
