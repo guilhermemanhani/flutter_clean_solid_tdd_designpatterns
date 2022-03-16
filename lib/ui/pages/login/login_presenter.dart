@@ -1,5 +1,6 @@
 abstract class LoginPresenter {
   Stream<String> get emailErrorStream;
+  Stream<String> get passwordErrorStream;
 
   void validateEmail(String email);
 
@@ -15,4 +16,7 @@ class LoginController implements LoginPresenter {
 
   @override
   void validatePassword(String password) {}
+
+  @override
+  Stream<String> get passwordErrorStream => throw UnimplementedError();
 }
