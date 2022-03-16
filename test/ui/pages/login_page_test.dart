@@ -12,9 +12,12 @@ import 'login_page_test.mocks.dart';
 @GenerateMocks([LoginPresenter])
 void main() {
   late LoginPresenter presenter;
+
   late StreamController<String> emailErrorController;
   late StreamController<String> passwordErrorController;
   late StreamController<bool> isFormValidController;
+  late StreamController<bool> isLoadingController;
+
   Future<void> loadPage(WidgetTester tester) async {
     presenter = MockLoginPresenter();
 
@@ -24,6 +27,8 @@ void main() {
 
     isFormValidController = StreamController<bool>();
 
+    isLoadingController = StreamController<bool>();
+
     when(presenter.emailErrorStream)
         .thenAnswer((_) => emailErrorController.stream);
 
@@ -32,6 +37,9 @@ void main() {
 
     when(presenter.isFormValidStream)
         .thenAnswer((_) => isFormValidController.stream);
+
+    when(presenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
 
     final loginPage = MaterialApp(home: LoginPage(presenter));
 
@@ -170,5 +178,14 @@ void main() {
     await tester.pump();
 
     verify(presenter.auth()).called(1);
+  });
+
+  testWidgets('Should present loading', (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isLoadingController.add(true);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }
