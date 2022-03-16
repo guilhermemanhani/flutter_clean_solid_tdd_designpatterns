@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'login_presenter.dart';
 
-import '../components/components.dart';
+import '../../components/components.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final LoginPresenter presenter;
+  const LoginPage(this.presenter);
 
   @override
   Widget build(BuildContext context) {
@@ -19,17 +21,24 @@ class LoginPage extends StatelessWidget {
               child: Form(
                 child: Column(
                   children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        icon: Icon(
-                          Icons.email,
-                          color: Theme.of(context).primaryColorLight,
-                        ),
-                        // errorText: '',
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                    ),
+                    StreamBuilder<String>(
+                        stream: presenter.emailErrorStream,
+                        builder: (context, snapshot) {
+                          return TextFormField(
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              icon: Icon(
+                                Icons.email,
+                                color: Theme.of(context).primaryColorLight,
+                              ),
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data,
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: presenter.validateEmail,
+                          );
+                        }),
                     Padding(
                       padding: const EdgeInsets.only(
                         top: 8.0,
@@ -43,6 +52,7 @@ class LoginPage extends StatelessWidget {
                             color: Theme.of(context).primaryColorLight,
                           ),
                         ),
+                        onChanged: presenter.validatePassword,
                         obscureText: true,
                       ),
                     ),
