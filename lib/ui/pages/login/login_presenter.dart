@@ -9,7 +9,7 @@ abstract class LoginPresenter {
 
   void validatePassword(String password);
 
-  void auth();
+  Future<void> auth();
 
   void dispose();
 }
@@ -34,7 +34,7 @@ class LoginController implements LoginPresenter {
   Stream<bool> get isLoadingStream => throw UnimplementedError();
 
   @override
-  void auth() {}
+  Future<void> auth() async {}
 
   @override
   Stream<String> get mainErrorStream => throw UnimplementedError();
