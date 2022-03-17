@@ -10,6 +10,8 @@ abstract class LoginPresenter {
   void validatePassword(String password);
 
   void auth();
+
+  void dispose();
 }
 
 class LoginController implements LoginPresenter {
@@ -36,4 +38,7 @@ class LoginController implements LoginPresenter {
 
   @override
   Stream<String> get mainErrorStream => throw UnimplementedError();
+
+  @override
+  void dispose() {}
 }
