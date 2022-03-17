@@ -219,4 +219,14 @@ void main() {
 
     expect(find.text('main error'), findsOneWidget);
   });
+
+  testWidgets('Should empty error message if authentication success',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    mainErrorController.add('');
+    await tester.pump();
+
+    expect(find.byType(SnackBar), findsNothing);
+  });
 }

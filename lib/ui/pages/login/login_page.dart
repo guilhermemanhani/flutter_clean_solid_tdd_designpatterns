@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
           });
 
           presenter.mainErrorStream.listen((error) {
-            if (error != null) {
+            if (error.isNotEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.red[900],
                 content: Text(
