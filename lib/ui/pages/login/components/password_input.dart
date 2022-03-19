@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/ui/pages/login/login_presenter.dart';
+import '../login_presenter.dart';
 import 'package:provider/provider.dart';
 
 class PassworInput extends StatelessWidget {
@@ -7,20 +7,21 @@ class PassworInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final presenter = Provider.of<LoginPresenter>(context);
     return StreamBuilder<String>(
-        stream: presenter.passwordErrorStream,
-        builder: (context, snapshot) {
-          return TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Senha',
-              icon: Icon(
-                Icons.lock,
-                color: Theme.of(context).primaryColorLight,
-              ),
-              errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
+      stream: presenter.passwordErrorStream,
+      builder: (context, snapshot) {
+        return TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Senha',
+            icon: Icon(
+              Icons.lock,
+              color: Theme.of(context).primaryColorLight,
             ),
-            onChanged: presenter.validatePassword,
-            obscureText: true,
-          );
-        });
+            errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
+          ),
+          onChanged: presenter.validatePassword,
+          obscureText: true,
+        );
+      },
+    );
   }
 }
