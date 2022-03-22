@@ -48,7 +48,7 @@ void main() {
     test('Should call post with correct values', () async {
       // !
       // ! quando for testar tem q mockar utilizando a linha abaixo
-      // ! Sem when ele da erro de stub ficar atendo a esse tipo de erro
+      // ! Sem when ele da erro de stub ficar atento a esse tipo de erro
       // ! Acredito q é devido ao nullsafy
       // !
       // !when(client.post(any,
