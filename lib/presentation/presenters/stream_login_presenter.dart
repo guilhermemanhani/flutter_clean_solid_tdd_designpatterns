@@ -25,7 +25,7 @@ class StreamLoginPresenter {
   StreamLoginPresenter(
       {required this.validation, required this.authentication});
 
-  final _controller = StreamController<LoginState>.broadcast();
+  var _controller = StreamController<LoginState>.broadcast();
 
   var _state = LoginState();
 
@@ -44,19 +44,27 @@ class StreamLoginPresenter {
   Stream<bool> get isLoadingStream =>
       _controller.stream.map((state) => state.isLoading).distinct();
 
-  void _update() => _controller.add(_state);
+  void _update() {
+    if (!_controller.isClosed) {
+      _controller.add(_state);
+    }
+  }
 
   void validateEmail(String email) {
-    _state.email = email;
-    _state.emailError = validation.validate(field: 'email', value: email);
-    _update();
+    if (!_controller.isClosed) {
+      _state.email = email;
+      _state.emailError = validation.validate(field: 'email', value: email);
+      _update();
+    }
   }
 
   void validatePassword(String password) {
-    _state.password = password;
-    _state.passwordError =
-        validation.validate(field: 'password', value: password);
-    _update();
+    if (!_controller.isClosed) {
+      _state.password = password;
+      _state.passwordError =
+          validation.validate(field: 'password', value: password);
+      _update();
+    }
   }
 
   Future<void> auth() async {
@@ -71,5 +79,10 @@ class StreamLoginPresenter {
     _state.isLoading = false;
     _update();
     // return result;
+  }
+
+  void dispose() {
+    _controller.close();
+    // _controller = null;
   }
 }
