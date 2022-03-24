@@ -1,64 +1,88 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/stream_login_presenter.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'stream_login_presenter_test.mocks.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/validation.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
 
-@GenerateMocks([Validation])
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/entities.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/presenters.dart';
+
+@GenerateMocks([Validation, Authentication])
 // ? @GenerateMocks([], customMocks: [MockSpec<Validation>(returnNullOnMissingStub: true)])
 // ? Forma de gerar a classe mock para nao haver alteraçao dos teste da maneira antiga do mockito
-// @GenerateMocks([],
-//     customMocks: [MockSpec<Validation>(returnNullOnMissingStub: true)])
+// @GenerateMocks([], customMocks: [
+//   MockSpec<Authentication>(returnNullOnMissingStub: true),
+//   MockSpec<Validation>(returnNullOnMissingStub: true)
+// ])
 void main() {
   late Validation validation;
   late StreamLoginPresenter sut;
   late String email;
   late String password;
+  late MockAuthentication authentication;
 
-  PostExpectation mockValidationCall(String field) =>
-      when(validation.validate(field: field, value: 'value'));
+  PostExpectation mockValidationCall(String? field) => when(validation.validate(
+      field: field == null ? anyNamed('field') : field,
+      value: anyNamed('value')));
 
-  void mockValidation({required String field, required String value}) {
+  void mockValidation({String? field, String? value}) {
     mockValidationCall(field).thenReturn(value);
+  }
+
+  PostExpectation mockAuthenticationCall() => when(authentication.auth(any));
+
+  void mockAuthentication() {
+    mockAuthenticationCall()
+        .thenAnswer((_) async => AccountEntity(faker.guid.guid()));
+  }
+
+  void mockAuthenticationErro(DomainError error) {
+    mockAuthenticationCall().thenThrow(error);
   }
 
   setUp(() {
     validation = MockValidation();
-    sut = StreamLoginPresenter(validation: validation);
+    authentication = MockAuthentication();
+    sut = StreamLoginPresenter(
+        validation: validation, authentication: authentication);
     email = faker.internet.email();
     password = faker.internet.password();
-    mockValidation(field: 'email', value: 'error');
+    mockValidation();
+    mockAuthentication();
   });
   test('Sould call Validation with correct email', () {
     // ! TEST ANTIGO
     // ? sut.validateEmail(email);
     // ? verify(validation.validate(field: 'email', value: email)).called(1);
     // ! OUTRO MODO DE TESTAR
+    // ! https://github.com/dart-lang/mockito/issues/402
     // * when(sut.validateEmail(email)).thenReturn(email);
     // * sut.validateEmail(email);
-    when(sut.validateEmail(email)).thenReturn(email);
+    // when(sut.validateEmail(email)).thenReturn(email);
     sut.validateEmail(email);
     verify(validation.validate(field: 'email', value: email)).called(1);
   });
 
   test('Sould emit error if validation fails', () {
-    mockValidation(field: 'email', value: 'error');
-    when(sut.validateEmail(email)).thenReturn('error');
+    mockValidation(value: 'error');
+    // when(sut.validateEmail(email)).thenReturn('error');
     sut.emailErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
+
     sut.validateEmail(email);
     sut.validateEmail(email);
   });
 
   test('Sould emit null if validation fails', () {
-    when(sut.validateEmail(email)).thenReturn('');
-    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, '')));
+    // when(sut.validateEmail(email)).thenReturn('');
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
     sut.validateEmail(email);
@@ -66,14 +90,13 @@ void main() {
   });
 
   test('Sould call Validation with correct password', () {
-    when(sut.validatePassword(password)).thenReturn(password);
     sut.validatePassword(password);
     verify(validation.validate(field: 'password', value: password)).called(1);
   });
 
-  test('Sould emit password error if validation fails', () {
-    mockValidation(field: 'password', value: 'error');
-    when(sut.validatePassword(password)).thenReturn('error');
+  test('Sould emit password error if validation fails value error', () {
+    mockValidation(value: 'error');
+
     sut.passwordErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.isFormValidStream
@@ -83,9 +106,10 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Sould emit empty password error if validation fails', () {
-    when(sut.validatePassword(password)).thenReturn('');
-    sut.passwordErrorStream.listen(expectAsync1((error) => expect(error, '')));
+  test('Sould emit null password error if validation fails', () {
+    sut.passwordErrorStream
+        .listen(expectAsync1((error) => expect(error, null)));
+
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
@@ -95,16 +119,64 @@ void main() {
 
   test('Sould emit password error if validation fails', () {
     mockValidation(field: 'email', value: 'error');
-    when(sut.validateEmail(email)).thenReturn('error');
-    when(sut.validatePassword(password)).thenReturn(password);
+
     sut.emailErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
+
     sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, password)));
+        .listen(expectAsync1((error) => expect(error, null)));
+
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
     sut.validateEmail(email);
+
     sut.validatePassword(password);
+  });
+
+  // test('Sould emit password error if validation fails daily', () async {
+  //   sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
+
+  //   sut.passwordErrorStream
+  //       .listen(expectAsync1((error) => expect(error, null)));
+
+  //   expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+
+  //   sut.validateEmail(email);
+  //   await Future.delayed(Duration.zero);
+  //   sut.validatePassword(password);
+  // });
+
+  test('Sould call Authentication with correct values', () async {
+    sut.validateEmail(email);
+
+    sut.validatePassword(password);
+
+    await sut.auth();
+
+    verify(authentication
+            .auth(AuthenticationParams(email: email, secret: password)))
+        .called(1);
+  });
+
+  test('Sould emit correct events on Authentication success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+    await sut.auth();
+  });
+
+  test('Sould emit correct events on InvalidCredentialsError', () async {
+    mockAuthenticationErro(DomainError.invalidCredentials);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.mainErrorStream.listen(
+        expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+
+    await sut.auth();
   });
 }
