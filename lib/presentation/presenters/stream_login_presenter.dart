@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
-
+import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
-
 import '../protocols/protocols.dart';
 
 class LoginState {

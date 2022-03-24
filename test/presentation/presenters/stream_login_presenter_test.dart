@@ -1,13 +1,11 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
-
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-
+import 'package:flutter_test/flutter_test.dart';
 import 'stream_login_presenter_test.mocks.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
 
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/entities.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/presenters.dart';
@@ -176,6 +174,18 @@ void main() {
     expectLater(sut.isLoadingStream, emits(false));
     sut.mainErrorStream.listen(
         expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+
+    await sut.auth();
+  });
+
+  test('Sould emit correct events on UnexpectedError', () async {
+    mockAuthenticationErro(DomainError.unexpected);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emits(false));
+    sut.mainErrorStream.listen(expectAsync1((error) =>
+        expect(error, 'Algo errado aconteceu. Tente novamente em breva.')));
 
     await sut.auth();
   });
