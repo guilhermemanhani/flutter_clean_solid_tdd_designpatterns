@@ -10,16 +10,20 @@ class RequiredFieldValidation {
   RequiredFieldValidation(this.field);
 
   String? validate(String value) {
-    return 'null';
+    return value.isEmpty ? 'Campo obrigatório' : null;
   }
 }
 
 void main() {
+  late RequiredFieldValidation sut;
+  setUp(() {
+    sut = RequiredFieldValidation('any_field');
+  });
   test('Sould return null if value is not empty', () {
-    final sut = RequiredFieldValidation('any_field');
+    expect(sut.validate('any_value'), null);
+  });
 
-    final error = sut.validate('any_value');
-
-    expect(error, null);
+  test('Sould return error if value is empty', () {
+    expect(sut.validate(''), 'Campo obrigatório');
   });
 }
