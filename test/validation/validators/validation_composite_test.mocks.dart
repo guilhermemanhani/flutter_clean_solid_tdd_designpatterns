@@ -27,7 +27,4 @@ class MockFieldValidation extends _i1.Mock implements _i2.FieldValidation {
   String get field =>
       (super.noSuchMethod(Invocation.getter(#field), returnValue: '')
           as String);
-  @override
-  String? validate(String? value) =>
-      (super.noSuchMethod(Invocation.method(#validate, [value])) as String?);
 }
