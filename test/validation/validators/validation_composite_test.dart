@@ -13,7 +13,8 @@ class ValidationComposite implements Validation {
   @override
   String? validate({String? field, String? value}) {
     String? error;
-    for (final validation in validations) {
+    for (final validation
+        in validations.where((element) => element.field == field)) {
       error = validation.validate(value);
       if (error?.isNotEmpty == true) {
         return error;
@@ -52,7 +53,7 @@ void main() {
     mockValidation2(null);
 
     validation3 = MockFieldValidation();
-    when(validation3.field).thenReturn('other_field');
+    when(validation3.field).thenReturn('any_field');
     mockValidation3(null);
 
     sut = ValidationComposite([validation1, validation2, validation3]);
@@ -71,6 +72,6 @@ void main() {
     mockValidation3('error3');
     final error = sut.validate(field: 'any_field', value: 'any_value');
 
-    expect(error, 'error1');
+    expect(error, 'error2');
   });
 }
