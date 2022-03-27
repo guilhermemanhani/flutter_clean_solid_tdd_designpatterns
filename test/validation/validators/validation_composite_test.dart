@@ -1,28 +1,10 @@
-import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/validation/protocols/field_validation.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/validation/protocols/protocols.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/validation/validators/validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'validation_composite_test.mocks.dart';
-
-class ValidationComposite implements Validation {
-  final List<FieldValidation> validations;
-
-  ValidationComposite(this.validations);
-  @override
-  String? validate({String? field, String? value}) {
-    String? error;
-    for (final validation
-        in validations.where((element) => element.field == field)) {
-      error = validation.validate(value);
-      if (error?.isNotEmpty == true) {
-        return error;
-      }
-    }
-    return null;
-  }
-}
 
 @GenerateMocks([FieldValidation])
 void main() {
