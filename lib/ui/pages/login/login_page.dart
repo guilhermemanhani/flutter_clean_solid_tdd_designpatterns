@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
           });
 
           widget.presenter.mainErrorStream.listen((error) {
-            if (error.isNotEmpty) {
+            if (error != null && error.isNotEmpty) {
               showErrorMessage(context, error);
             }
           });

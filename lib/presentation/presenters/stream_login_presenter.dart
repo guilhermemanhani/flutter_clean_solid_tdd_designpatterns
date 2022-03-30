@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../ui/pages/pages.dart';
+
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
 import '../protocols/protocols.dart';
@@ -13,13 +15,13 @@ class LoginState {
   bool isLoading = false;
 
   bool get isFormValid =>
-      emailError != null &&
-      passwordError != null &&
+      emailError == null &&
+      passwordError == null &&
       email != null &&
       password != null;
 }
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   final Validation validation;
   final Authentication authentication;
   StreamLoginPresenter(
