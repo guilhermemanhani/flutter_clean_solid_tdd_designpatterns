@@ -1,6 +1,7 @@
 import '../../presentation/protocols/protocols.dart';
 import '../protocols/protocols.dart';
 
+// ! COMPOSITE
 class ValidationComposite implements Validation {
   final List<FieldValidation> validations;
 
