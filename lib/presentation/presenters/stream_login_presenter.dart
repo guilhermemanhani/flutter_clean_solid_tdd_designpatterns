@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import '../../ui/pages/pages.dart';
 
@@ -84,5 +85,15 @@ class StreamLoginPresenter implements LoginPresenter {
 
   void dispose() {
     _controller.close();
+  }
+
+  @override
+  void addListener(VoidCallback listener) {
+    // !: implement addListener
+  }
+
+  @override
+  void removeListener(VoidCallback listener) {
+    // !: implement removeListener
   }
 }

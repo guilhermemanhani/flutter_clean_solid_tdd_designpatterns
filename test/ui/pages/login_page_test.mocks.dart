@@ -3,6 +3,7 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i3;
+import 'dart:ui' as _i4;
 
 import 'package:flutter_clean_solid_tdd_designpatterns/ui/pages/login/login_presenter.dart'
     as _i2;
@@ -60,4 +61,12 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
   @override
   void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
       returnValueForMissingStub: null);
+  @override
+  void addListener(_i4.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void removeListener(_i4.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+          returnValueForMissingStub: null);
 }

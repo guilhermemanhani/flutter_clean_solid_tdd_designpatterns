@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                   Headline1(text: 'Login'),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
-                    child: Provider(
+                    child: ListenableProvider(
                       create: (_) => widget.presenter,
                       child: Form(
                         child: Column(
