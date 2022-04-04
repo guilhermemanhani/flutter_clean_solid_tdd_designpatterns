@@ -26,17 +26,17 @@ class MockLoginPresenter extends _i1.Mock implements _i2.LoginPresenter {
   }
 
   @override
-  _i3.Stream<String> get emailErrorStream =>
+  _i3.Stream<String?> get emailErrorStream =>
       (super.noSuchMethod(Invocation.getter(#emailErrorStream),
-          returnValue: Stream<String>.empty()) as _i3.Stream<String>);
+          returnValue: Stream<String?>.empty()) as _i3.Stream<String?>);
   @override
-  _i3.Stream<String> get passwordErrorStream =>
+  _i3.Stream<String?> get passwordErrorStream =>
       (super.noSuchMethod(Invocation.getter(#passwordErrorStream),
-          returnValue: Stream<String>.empty()) as _i3.Stream<String>);
+          returnValue: Stream<String?>.empty()) as _i3.Stream<String?>);
   @override
-  _i3.Stream<String> get mainErrorStream =>
+  _i3.Stream<String?> get mainErrorStream =>
       (super.noSuchMethod(Invocation.getter(#mainErrorStream),
-          returnValue: Stream<String>.empty()) as _i3.Stream<String>);
+          returnValue: Stream<String?>.empty()) as _i3.Stream<String?>);
   @override
   _i3.Stream<bool> get isFormValidStream =>
       (super.noSuchMethod(Invocation.getter(#isFormValidStream),
