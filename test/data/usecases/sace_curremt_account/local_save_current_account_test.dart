@@ -1,5 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/account_entity.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/save_current_account.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -12,7 +13,12 @@ class LocalSaveCurrentAccount implements SaveCurrentAccount {
   LocalSaveCurrentAccount({required this.saveSecureCacheStorage});
   @override
   Future<void> save(AccountEntity account) async {
-    await saveSecureCacheStorage.saveSecure(key: 'token', value: account.token);
+    try {
+      await saveSecureCacheStorage.saveSecure(
+          key: 'token', value: account.token);
+    } catch (error) {
+      throw DomainError.unexpected;
+    }
   }
 }
 
@@ -37,5 +43,15 @@ void main() {
 
     verify(
         saveSecureCacheStorage.saveSecure(key: 'token', value: account.token));
+  });
+
+  test('Should throw UnexpectedError if SaveSecureCacheStorage throws',
+      () async {
+    when(saveSecureCacheStorage.saveSecure(
+            key: anyNamed('key'), value: anyNamed('value')))
+        .thenThrow(Exception());
+
+    final future = sut.save(account);
+    expect(future, throwsA(DomainError.unexpected));
   });
 }
