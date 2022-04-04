@@ -32,4 +32,13 @@ void main() {
     await sut.saveSecure(key: key, value: value);
     verify(secureStorage.write(key: key, value: value));
   });
+
+  test('Should throw if save secure throws', () async {
+    when(secureStorage.write(key: anyNamed('key'), value: anyNamed('value')))
+        .thenThrow(Exception());
+
+    final future = sut.saveSecure(key: key, value: value);
+
+    expect(future, throwsA(TypeMatcher<Exception>()));
+  });
 }
