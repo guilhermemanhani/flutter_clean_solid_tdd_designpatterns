@@ -2,15 +2,14 @@ import 'package:faker/faker.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'stream_login_presenter_test.mocks.dart';
-
+import 'getx_login_presenter_test.mocks.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/entities.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/presenters.dart';
 
-@GenerateMocks([Validation, Authentication])
+@GenerateMocks([Validation, Authentication, SaveCurrentAccount])
 // ? @GenerateMocks([], customMocks: [MockSpec<Validation>(returnNullOnMissingStub: true)])
 // ? Forma de gerar a classe mock para nao haver alteraçao dos teste da maneira antiga do mockito
 // @GenerateMocks([], customMocks: [
@@ -18,11 +17,14 @@ import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/p
 //   MockSpec<Validation>(returnNullOnMissingStub: true)
 // ])
 void main() {
-  late Validation validation;
   late GetxLoginPresenter sut;
+  late MockValidation validation;
+  late MockAuthentication authentication;
+  late MockSaveCurrentAccount saveCurrentAccount;
   late String email;
   late String password;
-  late MockAuthentication authentication;
+
+  late String token;
 
   PostExpectation mockValidationCall(String? field) => when(validation.validate(
       field: field == null ? anyNamed('field') : field,
@@ -35,8 +37,7 @@ void main() {
   PostExpectation mockAuthenticationCall() => when(authentication.auth(any));
 
   void mockAuthentication() {
-    mockAuthenticationCall()
-        .thenAnswer((_) async => AccountEntity(faker.guid.guid()));
+    mockAuthenticationCall().thenAnswer((_) async => AccountEntity(token));
   }
 
   void mockAuthenticationErro(DomainError error) {
@@ -46,10 +47,15 @@ void main() {
   setUp(() {
     validation = MockValidation();
     authentication = MockAuthentication();
+    saveCurrentAccount = MockSaveCurrentAccount();
     sut = GetxLoginPresenter(
-        validation: validation, authentication: authentication);
+      validation: validation,
+      authentication: authentication,
+      saveCurrentAccount: saveCurrentAccount,
+    );
     email = faker.internet.email();
     password = faker.internet.password();
+    token = faker.guid.guid();
     mockValidation();
     mockAuthentication();
   });
@@ -132,18 +138,18 @@ void main() {
     sut.validatePassword(password);
   });
 
-  // test('Sould emit password error if validation fails daily', () async {
-  //   sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
+  test('Sould emit password error if validation fails daily', () async {
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
 
-  //   sut.passwordErrorStream
-  //       .listen(expectAsync1((error) => expect(error, null)));
+    sut.passwordErrorStream
+        .listen(expectAsync1((error) => expect(error, null)));
 
-  //   expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+    expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
-  //   sut.validateEmail(email);
-  //   await Future.delayed(Duration.zero);
-  //   sut.validatePassword(password);
-  // });
+    sut.validateEmail(email);
+    await Future.delayed(Duration.zero);
+    sut.validatePassword(password);
+  });
 
   test('Sould call Authentication with correct values', () async {
     sut.validateEmail(email);
@@ -155,6 +161,15 @@ void main() {
     verify(authentication
             .auth(AuthenticationParams(email: email, secret: password)))
         .called(1);
+  });
+
+  test('Sould call SaveCurrentAccount with correct value', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    await sut.auth();
+
+    verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
   });
 
   test('Sould emit correct events on Authentication success', () async {

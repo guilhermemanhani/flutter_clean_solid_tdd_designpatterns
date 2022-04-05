@@ -68,7 +68,6 @@ void main() {
 
   test('Sould emit error if validation fails', () {
     mockValidation(value: 'error');
-    // when(sut.validateEmail(email)).thenReturn('error');
     sut.emailErrorStream
         .listen(expectAsync1((error) => expect(error, 'error')));
     sut.isFormValidStream
@@ -79,7 +78,6 @@ void main() {
   });
 
   test('Sould emit null if validation fails', () {
-    // when(sut.validateEmail(email)).thenReturn('');
     sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));

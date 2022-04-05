@@ -8,6 +8,8 @@ import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/account_e
     as _i2;
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/authentication.dart'
     as _i4;
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/save_current_account.dart'
+    as _i6;
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/validation.dart'
     as _i3;
 import 'package:mockito/mockito.dart' as _i1;
@@ -46,4 +48,20 @@ class MockAuthentication extends _i1.Mock implements _i4.Authentication {
               returnValue:
                   Future<_i2.AccountEntity>.value(_FakeAccountEntity_0()))
           as _i5.Future<_i2.AccountEntity>);
+}
+
+/// A class which mocks [SaveCurrentAccount].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSaveCurrentAccount extends _i1.Mock
+    implements _i6.SaveCurrentAccount {
+  MockSaveCurrentAccount() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<void> save(_i2.AccountEntity? account) =>
+      (super.noSuchMethod(Invocation.method(#save, [account]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
 }
