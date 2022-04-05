@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
-
-import '../../ui/pages/pages.dart';
 
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
@@ -16,13 +13,13 @@ class LoginState {
   bool isLoading = false;
 
   bool get isFormValid =>
-      emailError == null &&
-      passwordError == null &&
+      emailError != null &&
+      passwordError != null &&
       email != null &&
       password != null;
 }
 
-class StreamLoginPresenter implements LoginPresenter {
+class StreamLoginPresenter {
   final Validation validation;
   final Authentication authentication;
   StreamLoginPresenter(
@@ -86,18 +83,4 @@ class StreamLoginPresenter implements LoginPresenter {
   void dispose() {
     _controller.close();
   }
-
-  @override
-  void addListener(VoidCallback listener) {
-    // !: implement addListener
-  }
-
-  @override
-  void removeListener(VoidCallback listener) {
-    // !: implement removeListener
-  }
-
-  @override
-  // TODO: implement navigateToStream
-  Stream<String> get navigateToStream => throw UnimplementedError();
 }
