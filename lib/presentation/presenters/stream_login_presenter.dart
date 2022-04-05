@@ -96,4 +96,8 @@ class StreamLoginPresenter implements LoginPresenter {
   void removeListener(VoidCallback listener) {
     // !: implement removeListener
   }
+
+  @override
+  // TODO: implement navigateToStream
+  Stream<String> get navigateToStream => throw UnimplementedError();
 }

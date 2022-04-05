@@ -87,6 +87,11 @@ void main() {
     sut.isFormValidStream
         .listen(expectAsync1((isValid) => expect(isValid, false)));
 
+    // ! validando q a stream nao vai chamar duas vezes
+    // ! para atualizar se o valor for igual, tipo se for erro ele
+    // ! nao vai ficar atualizando o valor para erro, mesmo q vc chame
+    // ! o metodo validateEmail 200 vezes
+
     sut.validateEmail(email);
     sut.validateEmail(email);
   });
@@ -220,6 +225,16 @@ void main() {
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
     sut.mainErrorStream.listen(expectAsync1((error) =>
         expect(error, 'Algo errado aconteceu. Tente novamente em breva.')));
+
+    await sut.auth();
+  });
+
+  test('Should change page on success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
 
     await sut.auth();
   });
