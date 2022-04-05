@@ -44,6 +44,13 @@ void main() {
     mockAuthenticationCall().thenThrow(error);
   }
 
+  PostExpectation mockSaveCurremtAccountCall() =>
+      when(saveCurrentAccount.save(any));
+
+  void mockSaveCurremtAccountErro() {
+    mockSaveCurremtAccountCall().thenThrow(DomainError.unexpected);
+  }
+
   setUp(() {
     validation = MockValidation();
     authentication = MockAuthentication();
@@ -59,7 +66,7 @@ void main() {
     mockValidation();
     mockAuthentication();
   });
-  test('Sould call Validation with correct email', () {
+  test('Should call Validation with correct email', () {
     // ! TEST ANTIGO
     // ? sut.validateEmail(email);
     // ? verify(validation.validate(field: 'email', value: email)).called(1);
@@ -72,7 +79,7 @@ void main() {
     verify(validation.validate(field: 'email', value: email)).called(1);
   });
 
-  test('Sould emit error if validation fails', () {
+  test('Should emit error if validation fails', () {
     mockValidation(value: 'error');
     // when(sut.validateEmail(email)).thenReturn('error');
     sut.emailErrorStream
@@ -84,7 +91,7 @@ void main() {
     sut.validateEmail(email);
   });
 
-  test('Sould emit null if validation fails', () {
+  test('Should emit null if validation fails', () {
     // when(sut.validateEmail(email)).thenReturn('');
     sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
     sut.isFormValidStream
@@ -93,12 +100,12 @@ void main() {
     sut.validateEmail(email);
   });
 
-  test('Sould call Validation with correct password', () {
+  test('Should call Validation with correct password', () {
     sut.validatePassword(password);
     verify(validation.validate(field: 'password', value: password)).called(1);
   });
 
-  test('Sould emit password error if validation fails value error', () {
+  test('Should emit password error if validation fails value error', () {
     mockValidation(value: 'error');
 
     sut.passwordErrorStream
@@ -110,7 +117,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Sould emit null password error if validation fails', () {
+  test('Should emit null password error if validation fails', () {
     sut.passwordErrorStream
         .listen(expectAsync1((error) => expect(error, null)));
 
@@ -121,7 +128,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Sould emit password error if validation fails', () {
+  test('Should emit password error if validation fails', () {
     mockValidation(field: 'email', value: 'error');
 
     sut.emailErrorStream
@@ -138,7 +145,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Sould emit password error if validation fails daily', () async {
+  test('Should emit password error if validation fails daily', () async {
     sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
 
     sut.passwordErrorStream
@@ -151,7 +158,7 @@ void main() {
     sut.validatePassword(password);
   });
 
-  test('Sould call Authentication with correct values', () async {
+  test('Should call Authentication with correct values', () async {
     sut.validateEmail(email);
 
     sut.validatePassword(password);
@@ -163,7 +170,7 @@ void main() {
         .called(1);
   });
 
-  test('Sould call SaveCurrentAccount with correct value', () async {
+  test('Should call SaveCurrentAccount with correct value', () async {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
@@ -172,7 +179,19 @@ void main() {
     verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
   });
 
-  test('Sould emit correct events on Authentication success', () async {
+  test('Should emit UnexpectedError if SaveCurremtAccount fails', () async {
+    mockSaveCurremtAccountErro();
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream.listen(expectAsync1((error) =>
+        expect(error, 'Algo errado aconteceu. Tente novamente em breva.')));
+
+    await sut.auth();
+  });
+
+  test('Should emit correct events on Authentication success', () async {
     sut.validateEmail(email);
     sut.validatePassword(password);
 
@@ -181,7 +200,7 @@ void main() {
     await sut.auth();
   });
 
-  test('Sould emit correct events on InvalidCredentialsError', () async {
+  test('Should emit correct events on InvalidCredentialsError', () async {
     mockAuthenticationErro(DomainError.invalidCredentials);
     sut.validateEmail(email);
     sut.validatePassword(password);
@@ -193,7 +212,7 @@ void main() {
     await sut.auth();
   });
 
-  test('Sould emit correct events on UnexpectedError', () async {
+  test('Should emit correct events on UnexpectedError', () async {
     mockAuthenticationErro(DomainError.unexpected);
     sut.validateEmail(email);
     sut.validatePassword(password);
@@ -205,7 +224,7 @@ void main() {
     await sut.auth();
   });
 // ! nao faz sentido pois getx ja faz automatico
-  // test('Sould not emit after dispose', () async {
+  // test('Should not emit after dispose', () async {
   //   expectLater(sut.emailErrorStream, neverEmits(null));
 
   //   sut.dispose();

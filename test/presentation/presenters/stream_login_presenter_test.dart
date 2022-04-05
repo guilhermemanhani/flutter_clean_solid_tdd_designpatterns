@@ -53,7 +53,7 @@ void main() {
     mockValidation();
     mockAuthentication();
   });
-  test('Sould call Validation with correct email', () {
+  test('Should call Validation with correct email', () {
     // ! TEST ANTIGO
     // ? sut.validateEmail(email);
     // ? verify(validation.validate(field: 'email', value: email)).called(1);
