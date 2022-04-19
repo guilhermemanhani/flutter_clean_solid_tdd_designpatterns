@@ -1,4 +1,7 @@
-// import 'package:flutter_clean_solid_tdd_designpatterns/infra/cache/local_storage_adapter.dart';
+import '../../../infra/cache/cache.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-// LocalStorageAdapter makeLocalStorageAdapter() =>
-//   LocalStorageAdapter(localStorage: LocalStorage('fordev'));
+LocalStorageAdapter makeLocalStorageAdapter() {
+  final secureStorage = FlutterSecureStorage();
+  return LocalStorageAdapter(secureStorage: secureStorage);
+}
