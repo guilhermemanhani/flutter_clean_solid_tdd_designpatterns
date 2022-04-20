@@ -9,7 +9,7 @@
 
 // class MockHttpClient extends Mock implements HttpClient {}
 
-// void main() {
+void main() {}
 //   late MockHttpClient httpClient;
 //   late RemoteAuthentication sut;
 //   late String url;

@@ -1,9 +1,7 @@
-import 'package:equatable/equatable.dart';
-
 import '../protocols/protocols.dart';
 
 // ! LEAF
-class EmailValidation extends Equatable implements FieldValidation {
+class EmailValidation implements FieldValidation {
   final String field;
   EmailValidation(this.field);
 
@@ -19,5 +17,12 @@ class EmailValidation extends Equatable implements FieldValidation {
   }
 
   @override
-  List<Object?> get props => [field];
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is EmailValidation && other.field == field;
+  }
+
+  @override
+  int get hashCode => field.hashCode;
 }

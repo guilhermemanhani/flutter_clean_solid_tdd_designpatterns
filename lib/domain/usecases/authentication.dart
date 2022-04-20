@@ -1,12 +1,10 @@
-import 'package:equatable/equatable.dart';
-
 import '../entities/account_entity.dart';
 
 abstract class Authentication {
   Future<AccountEntity> auth(AuthenticationParams params);
 }
 
-class AuthenticationParams extends Equatable {
+class AuthenticationParams {
   final String email;
   final String secret;
 
@@ -16,5 +14,14 @@ class AuthenticationParams extends Equatable {
   });
 
   @override
-  List<Object?> get props => [email, secret];
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AuthenticationParams &&
+        other.email == email &&
+        other.secret == secret;
+  }
+
+  @override
+  int get hashCode => email.hashCode ^ secret.hashCode;
 }

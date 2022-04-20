@@ -1,10 +1,15 @@
-import 'package:equatable/equatable.dart';
-
-class AccountEntity extends Equatable {
+class AccountEntity {
   final String token;
 
   AccountEntity(this.token);
 
   @override
-  List<Object?> get props => [token];
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AccountEntity && other.token == token;
+  }
+
+  @override
+  int get hashCode => token.hashCode;
 }
