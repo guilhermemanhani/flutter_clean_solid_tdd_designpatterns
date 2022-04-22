@@ -5,6 +5,7 @@ import '../ui/components/components.dart';
 import 'main/factories/factories.dart';
 
 void main() {
+  //! translate R.load(Locale('pt', 'BR'));
   runApp(const App());
 }
 
