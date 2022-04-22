@@ -53,7 +53,7 @@ class StreamLoginPresenter {
   void validateEmail(String email) {
     if (!_controller.isClosed) {
       _state.email = email;
-      _state.emailError = validation.validate(field: 'email', value: email);
+      // _state.emailError = validation.validate(field: 'email', value: email);
       _update();
     }
   }
@@ -61,8 +61,8 @@ class StreamLoginPresenter {
   void validatePassword(String password) {
     if (!_controller.isClosed) {
       _state.password = password;
-      _state.passwordError =
-          validation.validate(field: 'password', value: password);
+      // _state.passwordError =
+      //     validation.validate(field: 'password', value: password);
       _update();
     }
   }
@@ -74,7 +74,7 @@ class StreamLoginPresenter {
       await authentication.auth(
           AuthenticationParams(email: _state.email!, secret: _state.password!));
     } on DomainError catch (error) {
-      _state.mainError = error.description;
+      // _state.mainError = error.description;
     }
     _state.isLoading = false;
     _update();

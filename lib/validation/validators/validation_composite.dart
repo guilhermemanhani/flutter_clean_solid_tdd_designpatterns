@@ -6,16 +6,15 @@ class ValidationComposite implements Validation {
   final List<FieldValidation> validations;
 
   ValidationComposite(this.validations);
-  @override
-  String? validate({String? field, String? value}) {
-    String? error;
-    for (final validation
-        in validations.where((element) => element.field == field)) {
+
+  ValidationError? validate({required String field, required String value}) {
+    ValidationError? error;
+    for (final validation in validations.where((v) => v.field == field)) {
       error = validation.validate(value);
-      if (error?.isNotEmpty == true) {
+      if (error != null) {
         return error;
       }
     }
-    return null;
+    return error;
   }
 }

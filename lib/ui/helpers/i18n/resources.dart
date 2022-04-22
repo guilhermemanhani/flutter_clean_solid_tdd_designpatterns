@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'strings/strings.dart';
 
 class R {
-  static Translations strings = PtBr();
+  static Translations string = PtBr();
 
   static void load(Locale locale) {
     switch (locale.languageCode) {
@@ -11,10 +11,10 @@ class R {
       //   strings = EnUs();
       //   break;
       case 'pt_BR':
-        strings = PtBr();
+        string = PtBr();
         break;
       default:
-        strings = PtBr();
+        string = PtBr();
         break;
     }
   }

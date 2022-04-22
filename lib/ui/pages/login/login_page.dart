@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import '../../../ui/mixins/mixins.dart';
 import 'package:provider/provider.dart';
 import '../../components/components.dart';
 import '../../../ui/helpers/i18n/resources.dart';
 import 'components/components.dart';
 import 'login_presenter.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatelessWidget with UIErrorManager, NavigationManager {
   final LoginPresenter presenter;
   const LoginPage(this.presenter);
 
@@ -30,17 +30,9 @@ class LoginPage extends StatelessWidget {
             }
           });
 
-          presenter.mainErrorStream.listen((error) {
-            if (error != null && error.isNotEmpty) {
-              showErrorMessage(context, error);
-            }
-          });
+          handleMainError(context, presenter.mainErrorStream);
+          handleNavigation(presenter.navigateToStream, clear: true);
 
-          presenter.navigateToStream.listen((page) {
-            if (page.isNotEmpty) {
-              Get.offAllNamed(page);
-            }
-          });
           return GestureDetector(
             onTap: _hideKeyboard,
             child: SingleChildScrollView(
@@ -68,7 +60,7 @@ class LoginPage extends StatelessWidget {
                             TextButton.icon(
                               onPressed: () => null,
                               icon: Icon(Icons.person),
-                              label: Text(R.strings.addAccount),
+                              label: Text(R.string.addAccount),
                             ),
                           ],
                         ),
