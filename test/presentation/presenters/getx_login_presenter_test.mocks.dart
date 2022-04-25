@@ -32,6 +32,12 @@ class MockValidation extends _i1.Mock implements _i3.Validation {
   MockValidation() {
     _i1.throwOnMissingStub(this);
   }
+
+  @override
+  _i3.ValidationError? validate({String? field, String? value}) =>
+      (super.noSuchMethod(
+              Invocation.method(#validate, [], {#field: field, #value: value}))
+          as _i3.ValidationError?);
 }
 
 /// A class which mocks [Authentication].
