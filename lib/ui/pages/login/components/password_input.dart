@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../ui/helpers/errors/errors.dart';
+import '../../../../ui/helpers/helpers.dart';
 import '../login_presenter.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class PassworInput extends StatelessWidget {
       builder: (context, snapshot) {
         return TextFormField(
           decoration: InputDecoration(
-            labelText: 'Senha',
+            labelText: R.string.password,
             icon: Icon(
               Icons.lock,
               color: Theme.of(context).primaryColorLight,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../ui/mixins/mixins.dart';
 import 'package:provider/provider.dart';
 import '../../components/components.dart';
-import '../../../ui/helpers/i18n/resources.dart';
+import '../../../ui/helpers/helpers.dart';
 import 'components/components.dart';
 import 'login_presenter.dart';
 
@@ -40,7 +40,7 @@ class LoginPage extends StatelessWidget with UIErrorManager, NavigationManager {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   LoginHeader(),
-                  Headline1(text: 'Login'),
+                  Headline1(text: R.string.login),
                   Padding(
                     padding: const EdgeInsets.all(32.0),
                     child: ListenableProvider(

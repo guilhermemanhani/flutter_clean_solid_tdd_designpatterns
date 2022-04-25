@@ -1,4 +1,4 @@
-import 'package:flutter_clean_solid_tdd_designpatterns/ui/helpers/i18n/resources.dart';
+import '../helpers.dart';
 
 enum UIError {
   requiredField,
