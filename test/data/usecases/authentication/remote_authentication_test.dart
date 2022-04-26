@@ -14,7 +14,7 @@ import 'package:flutter_clean_solid_tdd_designpatterns/data/usecases/usecases.da
 @GenerateMocks([HttpClient])
 void main() {
   late MockHttpClient httpClient;
-  late RemoteAuthentication sut;
+  late Authentication sut;
   late String url;
   late AuthenticationParams params;
 

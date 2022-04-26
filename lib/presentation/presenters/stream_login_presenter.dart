@@ -74,7 +74,7 @@ class StreamLoginPresenter {
       await authentication.auth(
           AuthenticationParams(email: _state.email!, secret: _state.password!));
     } on DomainError catch (error) {
-      // _state.mainError = error.description;
+      _state.mainError = error.name;
     }
     _state.isLoading = false;
     _update();
