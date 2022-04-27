@@ -28,11 +28,14 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   final _passwordError = Rx<UIError?>(null);
   final _mainError = Rx<UIError?>(null);
 
+  @override
   Stream<UIError?> get emailErrorStream => _emailError.stream;
 
-  Stream<UIError?> get passwordErrorStream => _passwordError.stream;
-
+  @override
   Stream<UIError?> get mainErrorStream => _mainError.stream;
+
+  @override
+  Stream<UIError?> get passwordErrorStream => _passwordError.stream;
 
   Stream<bool> get isFormValidStream => _isFormValid.stream;
 
