@@ -43,19 +43,6 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   Stream<String> get navigateToStream => _navigateTo.stream;
 
-  // void validateEmail(String email) {
-  //   _email = email;
-  //   _emailError.value = validation.validate(field: 'email', value: email);
-
-  //   _validateForm();
-  // }
-
-  // void validatePassword(String password) {
-  //   _password = password;
-  //   _passwordError.value =
-  //       validation.validate(field: 'password', value: password);
-  //   _validateForm();
-  // }
   void validateEmail(String email) {
     _email = email;
     _emailError.value = _validateField('email', email);
@@ -69,10 +56,6 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
   }
 
   UIError? _validateField(String field, String value) {
-    // final formData = {
-    //   'email': _email,
-    //   'password': _password,
-    // };
     final error = validation.validate(field: field, value: value);
     switch (error) {
       case ValidationError.invalidField:
