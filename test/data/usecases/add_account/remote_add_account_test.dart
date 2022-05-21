@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/data/http/http.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/data/usecases/usecases.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/add_account.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -10,9 +10,9 @@ class MockHttpClient extends Mock implements HttpClient {}
 
 void main() {
   late MockHttpClient httpClient;
-  late RemoteAuthentication sut;
+  late RemoteAddAccount sut;
   late String url;
-  late AuthenticationParams params;
+  late AddAccountParams params;
 
   Map mockValidData() =>
       {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
@@ -21,8 +21,10 @@ void main() {
         url: url,
         method: 'post',
         body: {
+          'name': params.name,
           'email': params.email,
-          'password': params.secret,
+          'password': params.password,
+          'passwordConfirmation': params.passwordConfirmation,
         },
       ));
 
@@ -37,22 +39,26 @@ void main() {
   setUp(() {
     httpClient = MockHttpClient();
     url = faker.internet.httpUrl();
-    sut = RemoteAuthentication(httpClient: httpClient, url: url);
-    params = AuthenticationParams(
+    sut = RemoteAddAccount(httpClient: httpClient, url: url);
+    params = AddAccountParams(
+      name: faker.person.name(),
       email: faker.internet.email(),
-      secret: faker.internet.password(),
+      password: faker.internet.password(),
+      passwordConfirmation: faker.internet.password(),
     );
     mockHttpData(mockValidData());
   });
   test("Should call HttpClient with correct values", () async {
-    await sut.auth(params);
+    await sut.add(params);
 
     verify(() => httpClient.request(
           url: url,
           method: 'post',
           body: {
+            'name': params.name,
             'email': params.email,
-            'password': params.secret,
+            'password': params.password,
+            'passwordConfirmation': params.passwordConfirmation,
           },
         ));
   });
@@ -60,7 +66,7 @@ void main() {
   test("Should throw UnexpectedError if HttpClient returns 400", () async {
     mockHttpErro(HttpError.badRequest);
 
-    final future = sut.auth(params);
+    final future = sut.add(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -68,7 +74,7 @@ void main() {
   test("Should throw UnexpectedError if HttpClient returns 404", () async {
     mockHttpErro(HttpError.serverError);
 
-    final future = sut.auth(params);
+    final future = sut.add(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
@@ -76,25 +82,25 @@ void main() {
   test("Should throw UnexpectedError if HttpClient returns 500", () async {
     mockHttpErro(HttpError.serverError);
 
-    final future = sut.auth(params);
+    final future = sut.add(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test("Should throw InvalidCredentialsError if HttpClient returns 401",
+  test("Should throw InvalidCredentialsError if HttpClient returns 403",
       () async {
-    mockHttpErro(HttpError.unauthorized);
+    mockHttpErro(HttpError.forbidden);
 
-    final future = sut.auth(params);
+    final future = sut.add(params);
 
-    expect(future, throwsA(DomainError.invalidCredentials));
+    expect(future, throwsA(DomainError.emailInUse));
   });
 
   test("Should return an Account if HttpClient returns 200", () async {
     final validData = mockValidData();
     mockHttpData(validData);
 
-    final account = await sut.auth(params);
+    final account = await sut.add(params);
 
     expect(account.token, validData['accessToken']);
   });
@@ -104,7 +110,7 @@ void main() {
       () async {
     mockHttpData({'invalid_key': 'invalid_value'});
 
-    final future = sut.auth(params);
+    final future = sut.add(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });

@@ -1,16 +1,16 @@
 import '../entities/account_entity.dart';
 
 abstract class AddAccount {
-  Future<AccountEntity> add(AddAccountnParams params);
+  Future<AccountEntity> add(AddAccountParams params);
 }
 
-class AddAccountnParams {
+class AddAccountParams {
   final String name;
   final String email;
   final String password;
   final String passwordConfirmation;
 
-  AddAccountnParams({
+  AddAccountParams({
     required this.name,
     required this.email,
     required this.password,
@@ -21,7 +21,7 @@ class AddAccountnParams {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is AddAccountnParams &&
+    return other is AddAccountParams &&
         other.name == name &&
         other.email == email &&
         other.password == password &&
