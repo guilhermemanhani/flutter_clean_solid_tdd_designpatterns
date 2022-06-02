@@ -21,7 +21,7 @@ class NameInput extends StatelessWidget {
             errorText: snapshot.data?.description,
           ),
           keyboardType: TextInputType.name,
-          onChanged: presenter.validateEmail,
+          onChanged: presenter.validateName,
         );
       },
     );

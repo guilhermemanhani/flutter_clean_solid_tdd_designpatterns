@@ -63,12 +63,22 @@ class MockSignupPresenter extends _i1.Mock implements _i2.SignupPresenter {
       (super.noSuchMethod(Invocation.getter(#isLoadingStream),
           returnValue: Stream<bool>.empty()) as _i3.Stream<bool>);
   @override
+  void validateName(String? name) =>
+      super.noSuchMethod(Invocation.method(#validateName, [name]),
+          returnValueForMissingStub: null);
+  @override
   void validateEmail(String? email) =>
       super.noSuchMethod(Invocation.method(#validateEmail, [email]),
           returnValueForMissingStub: null);
   @override
   void validatePassword(String? password) =>
       super.noSuchMethod(Invocation.method(#validatePassword, [password]),
+          returnValueForMissingStub: null);
+  @override
+  void validatePasswordConfirmation(String? passwordConfirmation) =>
+      super.noSuchMethod(
+          Invocation.method(
+              #validatePasswordConfirmation, [passwordConfirmation]),
           returnValueForMissingStub: null);
   @override
   _i3.Future<void> auth() => (super.noSuchMethod(Invocation.method(#auth, []),

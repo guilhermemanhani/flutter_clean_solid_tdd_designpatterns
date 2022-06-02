@@ -148,6 +148,10 @@ void main() {
       (WidgetTester tester) async {
     await loadPage(tester);
 
+    final name = faker.person.name();
+    await tester.enterText(find.bySemanticsLabel('Nome'), name);
+    verify(presenter.validateName(name));
+
     final email = faker.internet.email();
     await tester.enterText(find.bySemanticsLabel('Email'), email);
     verify(presenter.validateEmail(email));
@@ -155,6 +159,10 @@ void main() {
     final password = faker.internet.password();
     await tester.enterText(find.bySemanticsLabel('Senha'), password);
     verify(presenter.validatePassword(password));
+
+    // final password = faker.internet.password();
+    await tester.enterText(find.bySemanticsLabel('Confirmar senha'), password);
+    verify(presenter.validatePasswordConfirmation(password));
   });
 
   testWidgets('Should present error if email is invalid',
