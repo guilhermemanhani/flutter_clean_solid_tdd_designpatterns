@@ -8,12 +8,12 @@ import '../protocols/protocols.dart';
 
 class GetxSignUpPresenter extends GetxController implements SignupPresenter {
   final Validation validation;
-  final Authentication authentication;
+  final AddAccount addAccount;
   final SaveCurrentAccount saveCurrentAccount;
 
   GetxSignUpPresenter({
     required this.validation,
-    required this.authentication,
+    required this.addAccount,
     required this.saveCurrentAccount,
   });
 
@@ -107,8 +107,12 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
   Future<void> signUp() async {
     try {
       _isLoading.value = true;
-      final account = await authentication
-          .auth(AuthenticationParams(email: _email!, secret: _password!));
+      final account = await addAccount.add(AddAccountParams(
+        email: _email!,
+        password: _password!,
+        name: _name!,
+        passwordConfirmation: _passwordConfirmation!,
+      ));
       await saveCurrentAccount.save(account);
       _navigateTo.value = '/surveys';
     } on DomainError catch (error) {

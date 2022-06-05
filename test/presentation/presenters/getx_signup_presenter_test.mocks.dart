@@ -6,7 +6,7 @@ import 'dart:async' as _i5;
 
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/account_entity.dart'
     as _i2;
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/authentication.dart'
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/add_account.dart'
     as _i4;
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/save_current_account.dart'
     as _i6;
@@ -41,17 +41,17 @@ class MockValidation extends _i1.Mock implements _i3.Validation {
           as _i3.ValidationError?);
 }
 
-/// A class which mocks [Authentication].
+/// A class which mocks [AddAccount].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAuthentication extends _i1.Mock implements _i4.Authentication {
-  MockAuthentication() {
+class MockAddAccount extends _i1.Mock implements _i4.AddAccount {
+  MockAddAccount() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i2.AccountEntity> auth(_i4.AuthenticationParams? params) =>
-      (super.noSuchMethod(Invocation.method(#auth, [params]),
+  _i5.Future<_i2.AccountEntity> add(_i4.AddAccountParams? params) =>
+      (super.noSuchMethod(Invocation.method(#add, [params]),
               returnValue:
                   Future<_i2.AccountEntity>.value(_FakeAccountEntity_0()))
           as _i5.Future<_i2.AccountEntity>);

@@ -1,14 +1,15 @@
 import 'package:faker/faker.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/ui/helpers/errors/errors.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'getx_login_presenter_test.mocks.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
-import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/entities.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/domain/helpers/helpers.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/presenters.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/presentation/protocols/protocols.dart';
+import 'package:flutter_clean_solid_tdd_designpatterns/ui/helpers/errors/errors.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+
+import 'getx_login_presenter_test.mocks.dart';
 
 @GenerateMocks([Validation, Authentication, SaveCurrentAccount])
 // ? @GenerateMocks([], customMocks: [MockSpec<Validation>(returnNullOnMissingStub: true)])
@@ -156,11 +157,6 @@ void main() {
   });
 
   test('Should enable form button if any field is valid', () async {
-    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
-
-    sut.passwordErrorStream
-        .listen(expectAsync1((error) => expect(error, null)));
-
     expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
 
     sut.validateEmail(email);

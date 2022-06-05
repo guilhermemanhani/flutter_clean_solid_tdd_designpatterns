@@ -11,17 +11,11 @@ import 'package:mockito/mockito.dart';
 
 import 'getx_signup_presenter_test.mocks.dart';
 
-@GenerateMocks([Validation, Authentication, SaveCurrentAccount])
-// ? @GenerateMocks([], customMocks: [MockSpec<Validation>(returnNullOnMissingStub: true)])
-// ? Forma de gerar a classe mock para nao haver alteraçao dos teste da maneira antiga do mockito
-// @GenerateMocks([], customMocks: [
-//   MockSpec<Authentication>(returnNullOnMissingStub: true),
-//   MockSpec<Validation>(returnNullOnMissingStub: true)
-// ])
+@GenerateMocks([Validation, AddAccount, SaveCurrentAccount])
 void main() {
   late GetxSignUpPresenter sut;
   late MockValidation validation;
-  late MockAuthentication authentication;
+  late MockAddAccount addAccount;
   late MockSaveCurrentAccount saveCurrentAccount;
   late String email;
   late String name;
@@ -38,14 +32,14 @@ void main() {
     mockValidationCall(field).thenReturn(value);
   }
 
-  PostExpectation mockAuthenticationCall() => when(authentication.auth(any));
+  PostExpectation mockAddAccountCall() => when(addAccount.add(any));
 
-  void mockAuthentication() {
-    mockAuthenticationCall().thenAnswer((_) async => AccountEntity(token));
+  void mockAddAccount() {
+    mockAddAccountCall().thenAnswer((_) async => AccountEntity(token));
   }
 
-  void mockAuthenticationErro(DomainError error) {
-    mockAuthenticationCall().thenThrow(error);
+  void mockAddAccountErro(DomainError error) {
+    mockAddAccountCall().thenThrow(error);
   }
 
   PostExpectation mockSaveCurremtAccountCall() =>
@@ -57,11 +51,11 @@ void main() {
 
   setUp(() {
     validation = MockValidation();
-    authentication = MockAuthentication();
+    addAccount = MockAddAccount();
     saveCurrentAccount = MockSaveCurrentAccount();
     sut = GetxSignUpPresenter(
       validation: validation,
-      authentication: authentication,
+      addAccount: addAccount,
       saveCurrentAccount: saveCurrentAccount,
     );
     email = faker.internet.email();
@@ -70,7 +64,7 @@ void main() {
     passwordConfirmation = faker.internet.password();
     token = faker.guid.guid();
     mockValidation();
-    mockAuthentication();
+    mockAddAccount();
   });
   test('Should call Validation with correct email', () {
     sut.validateEmail(email);
@@ -219,5 +213,109 @@ void main() {
         .listen(expectAsync1((isValid) => expect(isValid, false)));
     sut.validatePasswordConfirmation(passwordConfirmation);
     sut.validatePasswordConfirmation(passwordConfirmation);
+  });
+
+  test('Should enable form button if any field is valid', () async {
+    expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+
+    sut.validateName(email);
+    await Future.delayed(Duration.zero);
+    sut.validateEmail(email);
+    await Future.delayed(Duration.zero);
+    sut.validatePassword(password);
+    await Future.delayed(Duration.zero);
+    sut.validatePasswordConfirmation(email);
+  });
+
+  test('Should call Authentication with correct values', () async {
+    sut.validateEmail(email);
+    sut.validateName(name);
+    sut.validatePassword(password);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    await sut.signUp();
+
+    verify(addAccount.add(AddAccountParams(
+            email: email,
+            password: password,
+            name: name,
+            passwordConfirmation: passwordConfirmation)))
+        .called(1);
+  });
+
+  test('Should call SaveCurrentAccount with correct value', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    await sut.signUp();
+
+    verify(saveCurrentAccount.save(AccountEntity(token))).called(1);
+  });
+
+  test('Should emit UnexpectedError if SaveCurremtAccount fails', () async {
+    mockSaveCurremtAccountErro();
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+
+    await sut.signUp();
+  });
+
+  test('Should emit correct events on Authentication success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emits(true));
+
+    await sut.signUp();
+  });
+
+  test('Should emit correct events on InvalidCredentialsError', () async {
+    mockAddAccountErro(DomainError.invalidCredentials);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream.listen(
+        expectAsync1((error) => expect(error, UIError.invalidCredentials)));
+
+    await sut.signUp();
+  });
+
+  test('Should emit correct events on UnexpectedError', () async {
+    mockAddAccountErro(DomainError.unexpected);
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.unexpected)));
+
+    await sut.signUp();
+  });
+
+  test('Should change page on success', () async {
+    sut.validateEmail(email);
+    sut.validatePassword(password);
+    sut.validateName(name);
+    sut.validatePasswordConfirmation(passwordConfirmation);
+
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/surveys')));
+
+    await sut.signUp();
   });
 }
