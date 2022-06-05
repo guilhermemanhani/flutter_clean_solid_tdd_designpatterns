@@ -20,7 +20,7 @@ abstract class SignupPresenter implements Listenable {
 
   void validatePasswordConfirmation(String passwordConfirmation);
 
-  Future<void> auth();
+  Future<void> signUp();
 
   void dispose();
 }

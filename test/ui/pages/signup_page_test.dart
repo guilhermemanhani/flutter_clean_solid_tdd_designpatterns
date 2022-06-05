@@ -89,6 +89,12 @@ void main() {
           name: '/signup',
           page: () => SignupPage(presenter),
         ),
+        GetPage(
+          name: '/any_route',
+          page: () => Scaffold(
+            body: Text('fake page'),
+          ),
+        ),
       ],
     );
 
@@ -250,32 +256,6 @@ void main() {
     );
   });
 
-  testWidgets('Should present error if password is invalid',
-      (WidgetTester tester) async {
-    await loadPage(tester);
-
-    passwordErrorController.add(UIError.requiredField);
-
-    await tester.pump();
-
-    expect(find.text('Campo obrigatório'), findsOneWidget);
-  });
-
-  testWidgets('Should present no error if password is valid',
-      (WidgetTester tester) async {
-    await loadPage(tester);
-
-    passwordErrorController.add(null);
-
-    await tester.pump();
-
-    expect(
-      find.descendant(
-          of: find.bySemanticsLabel('Senha'), matching: find.byType(Text)),
-      findsOneWidget,
-    );
-  });
-
   testWidgets('Should enable button if form is valid',
       (WidgetTester tester) async {
     await loadPage(tester);
@@ -300,17 +280,19 @@ void main() {
     expect(button.onPressed, null);
   });
 
-  testWidgets('Should call authentication on form submit',
-      (WidgetTester tester) async {
+  testWidgets('Should call signUp on form submit', (WidgetTester tester) async {
     await loadPage(tester);
 
     isFormValidController.add(true);
 
     await tester.pump();
-    await tester.tap(find.byType(ElevatedButton));
+
+    final button = find.byType(ElevatedButton);
+    await tester.ensureVisible(button);
+    await tester.tap(button);
     await tester.pump();
 
-    verify(presenter.auth()).called(1);
+    verify(presenter.signUp()).called(1);
   });
 
   testWidgets('Should present loading', (WidgetTester tester) async {
@@ -334,17 +316,17 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 
-  testWidgets('Should present error message if authentication fails',
+  testWidgets('Should present error message if signUp fails',
       (WidgetTester tester) async {
     await loadPage(tester);
 
-    mainErrorController.add(UIError.invalidCredentials);
+    mainErrorController.add(UIError.emailInUse);
     await tester.pump();
 
-    expect(find.text('Credenciais inválidas.'), findsOneWidget);
+    expect(find.text('O email já está em uso.'), findsOneWidget);
   });
 
-  testWidgets('Should present error message if authentication throws',
+  testWidgets('Should present error message if signUp throws',
       (WidgetTester tester) async {
     await loadPage(tester);
 
@@ -383,7 +365,7 @@ void main() {
 
     await tester.pump();
 
-    expect(Get.currentRoute, '/login');
+    expect(Get.currentRoute, '/signup');
   });
   // testWidgets('Should close streams on dispose', (WidgetTester tester) async {
   //   await loadPage(tester);
