@@ -19,6 +19,8 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
 
   String? _email;
   String? _password;
+  String? _name;
+  String? _passwordConfirmation;
 
   var _navigateTo = RxString('');
   var _isFormValid = false.obs;
@@ -64,6 +66,21 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
     _validateForm();
   }
 
+  @override
+  void validateName(String name) {
+    _name = name;
+    _nameError.value = _validateField('name', name);
+    _validateForm();
+  }
+
+  @override
+  void validatePasswordConfirmation(String passwordConfirmation) {
+    _passwordConfirmation = passwordConfirmation;
+    _passwordConfirmationError.value =
+        _validateField('passwordConfirmation', passwordConfirmation);
+    _validateForm();
+  }
+
   UIError? _validateField(String field, String value) {
     final error = validation.validate(field: field, value: value);
     switch (error) {
@@ -79,11 +96,15 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
   void _validateForm() {
     _isFormValid.value = _emailError.value == null &&
         _passwordError.value == null &&
+        _nameError.value == null &&
+        _passwordConfirmationError.value == null &&
         _email != null &&
-        _password != null;
+        _password != null &&
+        _name != null &&
+        _passwordConfirmation != null;
   }
 
-  Future<void> auth() async {
+  Future<void> signUp() async {
     try {
       _isLoading.value = true;
       final account = await authentication
@@ -106,20 +127,4 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
 
   // ignore: must_call_super
   void dispose() {}
-
-  @override
-  Future<void> signUp() {
-    // TODO: implement signUp
-    throw UnimplementedError();
-  }
-
-  @override
-  void validateName(String name) {
-    // TODO: implement validateName
-  }
-
-  @override
-  void validatePasswordConfirmation(String passwordConfirmation) {
-    // TODO: implement validatePasswordConfirmation
-  }
 }
