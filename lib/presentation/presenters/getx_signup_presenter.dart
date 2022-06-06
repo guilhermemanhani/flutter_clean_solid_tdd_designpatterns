@@ -118,8 +118,8 @@ class GetxSignUpPresenter extends GetxController implements SignupPresenter {
     } on DomainError catch (error) {
       // _mainError.value = error.description;
       switch (error) {
-        case DomainError.invalidCredentials:
-          _mainError.value = UIError.invalidCredentials;
+        case DomainError.emailInUse:
+          _mainError.value = UIError.emailInUse;
           break;
         default:
           _mainError.value = UIError.unexpected;

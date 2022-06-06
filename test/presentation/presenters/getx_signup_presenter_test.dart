@@ -280,20 +280,20 @@ void main() {
   });
 
   test('Should emit correct events on InvalidCredentialsError', () async {
-    mockAddAccountErro(DomainError.invalidCredentials);
+    mockAddAccountErro(DomainError.emailInUse);
     sut.validateEmail(email);
     sut.validatePassword(password);
     sut.validateName(name);
     sut.validatePasswordConfirmation(passwordConfirmation);
 
     expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
-    sut.mainErrorStream.listen(
-        expectAsync1((error) => expect(error, UIError.invalidCredentials)));
+    sut.mainErrorStream
+        .listen(expectAsync1((error) => expect(error, UIError.emailInUse)));
 
     await sut.signUp();
   });
 
-  test('Should emit correct events on UnexpectedError', () async {
+  test('Should emit correct events on EmailInUseError', () async {
     mockAddAccountErro(DomainError.unexpected);
     sut.validateEmail(email);
     sut.validatePassword(password);
