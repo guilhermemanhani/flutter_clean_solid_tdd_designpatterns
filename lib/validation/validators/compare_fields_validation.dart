@@ -14,4 +14,16 @@ class CompareFieldsValidation implements FieldValidation {
   ValidationError? validate(String? value) {
     return value == valueToCompare ? null : ValidationError.invalidField;
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is CompareFieldsValidation &&
+        other.field == field &&
+        other.valueToCompare == valueToCompare;
+  }
+
+  @override
+  int get hashCode => field.hashCode ^ valueToCompare.hashCode;
 }

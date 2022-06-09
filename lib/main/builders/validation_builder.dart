@@ -23,5 +23,16 @@ class ValidationBuilder {
     return this;
   }
 
+  ValidationBuilder minLength(int size) {
+    validations.add(MinLengthValidation(field: fieldName, size: size));
+    return this;
+  }
+
+  ValidationBuilder compare(String fieldNameToCompare) {
+    validations.add(CompareFieldsValidation(
+        field: fieldName, valueToCompare: fieldNameToCompare));
+    return this;
+  }
+
   List<FieldValidation> build() => validations;
 }
