@@ -308,11 +308,16 @@ void main() {
 
     expect(Get.currentRoute, '/login');
   });
-  // testWidgets('Should close streams on dispose', (WidgetTester tester) async {
-  //   await loadPage(tester);
 
-  //   addTearDown(() {
-  //     verify(presenter.dispose()).called(1);
-  //   });
-  // });
+  testWidgets('Should call gotoSignUp on form submit',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    final button = find.byKey(Key('signUpButton'));
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pump();
+
+    verify(presenter.goToSignUp()).called(1);
+  });
 }

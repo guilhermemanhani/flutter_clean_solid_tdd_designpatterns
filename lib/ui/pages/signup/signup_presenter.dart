@@ -22,5 +22,7 @@ abstract class SignupPresenter implements Listenable {
 
   Future<void> signUp();
 
+  void goToLogin();
+
   void dispose();
 }

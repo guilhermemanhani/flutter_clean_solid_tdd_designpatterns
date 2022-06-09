@@ -58,7 +58,8 @@ class LoginPage extends StatelessWidget with UIErrorManager, NavigationManager {
                             ),
                             LoginButton(),
                             TextButton.icon(
-                              onPressed: () => null,
+                              key: Key('signUpButton'),
+                              onPressed: () => presenter.goToSignUp(),
                               icon: Icon(Icons.person),
                               label: Text(R.string.addAccount),
                             ),

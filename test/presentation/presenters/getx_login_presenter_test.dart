@@ -239,6 +239,12 @@ void main() {
 
     await sut.auth();
   });
+
+  test('Should got to SignUpPage on link click', () async {
+    sut.navigateToStream
+        .listen(expectAsync1((page) => expect(page, '/signup')));
+    sut.goToSignUp();
+  });
 // ! nao faz sentido pois getx ja faz automatico
   // test('Should not emit after dispose', () async {
   //   expectLater(sut.emailErrorStream, neverEmits(null));

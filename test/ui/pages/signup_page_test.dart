@@ -367,4 +367,16 @@ void main() {
 
     expect(Get.currentRoute, '/signup');
   });
+
+  testWidgets('Should call gotoSignUp on form submit',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    final button = find.byKey(Key('loginbutton'));
+    await tester.ensureVisible(button);
+    await tester.tap(button);
+    await tester.pump();
+
+    verify(presenter.goToLogin()).called(1);
+  });
 }
