@@ -11,10 +11,11 @@ class CompareFieldsValidation implements FieldValidation {
   });
 
   @override
-  ValidationError? validate(Map input) {
-    return input[field] == fieldToCompare ? null : ValidationError.invalidField;
-  }
-
+  ValidationError? validate(Map input) => input[field] != null &&
+          input[fieldToCompare] != null &&
+          input[field] != input[fieldToCompare]
+      ? ValidationError.invalidField
+      : null;
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
