@@ -11,13 +11,9 @@ class MinLengthValidation implements FieldValidation {
   });
 
   @override
-  ValidationError? validate(String? value) {
-    if (value != null) {
-      final isValid = value.length >= size;
-      return isValid ? null : ValidationError.invalidField;
-    } else {
-      return ValidationError.invalidField;
-    }
+  ValidationError? validate(Map input) {
+    final isValid = input[field].length >= size;
+    return isValid ? null : ValidationError.invalidField;
   }
 
   @override

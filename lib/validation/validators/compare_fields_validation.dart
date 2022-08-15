@@ -4,15 +4,15 @@ import '../protocols/protocols.dart';
 
 class CompareFieldsValidation implements FieldValidation {
   final String field;
-  final String valueToCompare;
+  final String fieldToCompare;
   CompareFieldsValidation({
     required this.field,
-    required this.valueToCompare,
+    required this.fieldToCompare,
   });
 
   @override
-  ValidationError? validate(String? value) {
-    return value == valueToCompare ? null : ValidationError.invalidField;
+  ValidationError? validate(Map input) {
+    return input[field] == fieldToCompare ? null : ValidationError.invalidField;
   }
 
   @override
@@ -21,9 +21,9 @@ class CompareFieldsValidation implements FieldValidation {
 
     return other is CompareFieldsValidation &&
         other.field == field &&
-        other.valueToCompare == valueToCompare;
+        other.fieldToCompare == fieldToCompare;
   }
 
   @override
-  int get hashCode => field.hashCode ^ valueToCompare.hashCode;
+  int get hashCode => field.hashCode ^ fieldToCompare.hashCode;
 }

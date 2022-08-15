@@ -1,9 +1,9 @@
 import 'package:get/state_manager.dart';
 
-import '../../ui/pages/pages.dart';
-import '../../ui/helpers/errors/errors.dart';
 import '../../domain/helpers/helpers.dart';
 import '../../domain/usecases/usecases.dart';
+import '../../ui/helpers/errors/errors.dart';
+import '../../ui/pages/pages.dart';
 import '../protocols/protocols.dart';
 
 class GetxLoginPresenter extends GetxController implements LoginPresenter {
@@ -45,18 +45,22 @@ class GetxLoginPresenter extends GetxController implements LoginPresenter {
 
   void validateEmail(String email) {
     _email = email;
-    _emailError.value = _validateField('email', email);
+    _emailError.value = _validateField('email');
     _validateForm();
   }
 
   void validatePassword(String password) {
     _password = password;
-    _passwordError.value = _validateField('password', password);
+    _passwordError.value = _validateField('password');
     _validateForm();
   }
 
-  UIError? _validateField(String field, String value) {
-    final error = validation.validate(field: field, value: value);
+  UIError? _validateField(String field) {
+    final formData = {
+      'email': _email,
+      'password': _password,
+    };
+    final error = validation.validate(field: field, input: formData);
     switch (error) {
       case ValidationError.invalidField:
         return UIError.invalidField;

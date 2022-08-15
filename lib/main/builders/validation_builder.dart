@@ -30,7 +30,7 @@ class ValidationBuilder {
 
   ValidationBuilder compare(String fieldNameToCompare) {
     validations.add(CompareFieldsValidation(
-        field: fieldName, valueToCompare: fieldNameToCompare));
+        field: fieldName, fieldToCompare: fieldNameToCompare));
     return this;
   }
 

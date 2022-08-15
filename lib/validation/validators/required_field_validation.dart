@@ -1,5 +1,4 @@
 import '../../presentation/protocols/validation.dart';
-
 import '../protocols/protocols.dart';
 
 // ! LEAF
@@ -7,8 +6,8 @@ class RequiredFieldValidation implements FieldValidation {
   final String field;
   RequiredFieldValidation(this.field);
 
-  ValidationError? validate(String? value) =>
-      value?.isNotEmpty == true ? null : ValidationError.requiredField;
+  ValidationError? validate(Map input) =>
+      input[field].isNotEmpty == true ? null : ValidationError.requiredField;
 
   @override
   bool operator ==(Object other) {
