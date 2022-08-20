@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
+
 import '../ui/components/components.dart';
 import 'main/factories/factories.dart';
 
@@ -24,6 +25,10 @@ class App extends StatelessWidget {
         GetPage(name: '/', page: makeSplashPage, transition: Transition.fade),
         GetPage(
             name: '/login', page: makeLoginPage, transition: Transition.fadeIn),
+        GetPage(
+          name: '/signup',
+          page: makeSignupPage,
+        ),
         GetPage(
             name: '/surveys',
             page: () => Scaffold(body: Text('Surveys')),

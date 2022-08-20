@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import '../../ui/pages/pages.dart';
+
 import '../../domain/usecases/usecases.dart';
+import '../../ui/pages/pages.dart';
 
 class GetxSplashPresenter extends SplashPresenter {
   final LoadCurrentAccount loadCurrentAccount;
@@ -11,8 +12,8 @@ class GetxSplashPresenter extends SplashPresenter {
   Future<void> checkAccount({int durationInSeconds = 2}) async {
     await Future.delayed(Duration(seconds: durationInSeconds));
     try {
-      await loadCurrentAccount.load();
-      _navigateTo.value = '/surveys';
+      final account = await loadCurrentAccount.load();
+      _navigateTo.value = account.token.isEmpty ? '/login' : '/surveys';
     } catch (error) {
       _navigateTo.value = '/login';
     }

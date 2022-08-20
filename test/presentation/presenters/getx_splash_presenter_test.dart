@@ -2,9 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/account_entity.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/domain/usecases/usecases.dart';
 import 'package:flutter_clean_solid_tdd_designpatterns/presentation/presenters/presenters.dart';
-
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -53,6 +51,14 @@ void main() {
 
   test('Should  go to login page on null result', () async {
     mockLoadCurrentAccount(account: null);
+
+    sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
+
+    await sut.checkAccount(durationInSeconds: 0);
+  });
+
+  test('Should  go to login page on empty token', () async {
+    mockLoadCurrentAccount(account: AccountEntity(''));
 
     sut.navigateToStream.listen(expectAsync1((page) => expect(page, '/login')));
 
