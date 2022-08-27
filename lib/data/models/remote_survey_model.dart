@@ -1,4 +1,5 @@
-import 'package:flutter_clean_solid_tdd_designpatterns/domain/entities/entities.dart';
+import '../../data/http/http.dart';
+import '../../domain/entities/entities.dart';
 
 class RemoteSurveyModel {
   final String id;
@@ -17,7 +18,7 @@ class RemoteSurveyModel {
     if (!json.keys
         .toSet()
         .containsAll(['id', 'question', 'date', 'didAnswer'])) {
-      // throw HttpError.invalidData;
+      throw HttpError.invalidData;
     }
     return RemoteSurveyModel(
       id: json['id'],
